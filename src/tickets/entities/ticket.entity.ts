@@ -1,1 +1,1 @@
-export class Ticket {}
+export { TicketPriority, TicketStatus, type Ticket } from '@prisma/client';
