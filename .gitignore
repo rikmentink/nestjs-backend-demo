@@ -209,3 +209,10 @@ dist
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/node,git,visualstudiocode,macos
+
+# Prisma files
+/generated/prisma
+/src/generated/prisma
+
+# Database-related files
+*.db
