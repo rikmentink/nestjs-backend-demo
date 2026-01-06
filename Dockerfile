@@ -1,6 +1,9 @@
 FROM node:22-bookworm-slim
 WORKDIR /app
 
+# Prisma needs OpenSSL
+RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+
 # Install dependencies
 COPY package.json package-lock.json ./
 RUN npm ci
@@ -17,4 +20,4 @@ ENV NODE_ENV=production
 EXPOSE 3000
 
 # Apply migrations on startup and run the app
-CMD ["sh", "-c", "./node_modules/.bin/prisma migrate deploy --url \"$DATABASE_URL\" && node dist/main.js"]
+CMD ["sh", "-c", "./node_modules/.bin/prisma migrate deploy && node dist/src/main.js"]

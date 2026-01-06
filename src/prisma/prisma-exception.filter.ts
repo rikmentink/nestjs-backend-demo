@@ -30,6 +30,14 @@ export class PrismaExceptionFilter implements ExceptionFilter {
         const err = new ConflictException('Unique constraint violated');
         return res.status(err.getStatus()).json(err.getResponse());
       }
+      case 'P2021': {
+        // Table does not exist / schema not initialized
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+          statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+          message:
+            'Database schema is not initialized (missing table). Did migrations run?',
+        });
+      }
       default: {
         // Any other error
         return res.status(HttpStatus.BAD_REQUEST).json({
