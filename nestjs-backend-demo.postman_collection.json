@@ -1,0 +1,295 @@
+{
+	"info": {
+		"_postman_id": "0a47f069-c5dc-4f7a-baae-58ca2a4005bb",
+		"name": "nestjs-backend-demo",
+		"description": "This is a simple Postman collection to test the API of my NestJS backend demo project.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39077060"
+	},
+	"item": [
+		{
+			"name": "Tickets",
+			"item": [
+				{
+					"name": "Create ticket",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('should return 201 Created status', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test('stores ticket id on success', function () {",
+									"  if (pm.response.code !== 201) return;",
+									"",
+									"  const json = pm.response.json();",
+									"  if (json && json.id != null) {",
+									"    pm.collectionVariables.set('ticketId', String(json.id));",
+									"  }",
+									"",
+									"    pm.expect(pm.collectionVariables.get('ticketId')).to.not.be.undefined;",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"subject\": \"Cannot log in to account\",\n    \"description\": \"User reports that login fails with 500 error when using SSO.\",\n    \"priority\": \"medium\",\n    \"customerId\": \"123e4567-e89b-12d3-a456-426614174000\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/tickets",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"tickets"
+							]
+						},
+						"description": "Create a new ticket that will be assigned to one of our agents."
+					},
+					"response": []
+				},
+				{
+					"name": "Find all tickets",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Should return an array\", function () {",
+									"    pm.response.to.be.json;",
+									"",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an('array');",
+									"})",
+									"",
+									"pm.test(\"Should contain our created ticket\", function () {",
+									"    if (!pm.collectionVariables.get(\"ticketId\")) return;",
+									"",
+									"    var jsonData = pm.response.json()",
+									"    var ticket = jsonData.find(item => item.id === pm.collectionVariables.get(\"ticketId\"));",
+									"    pm.expect(ticket).exist",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/tickets",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"tickets"
+							]
+						},
+						"description": "Retrieve all active tickets"
+					},
+					"response": []
+				},
+				{
+					"name": "Find one ticket",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Should return a 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"})",
+									"",
+									"pm.test(\"Should find our ticket\", function () {",
+									"    var ticketId = pm.collectionVariables.get(\"ticketId\");",
+									"    if (!ticketId) return;",
+									"",
+									"    pm.expect(pm.response.json().id).to.eql(ticketId);",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/tickets/{{ticketId}}",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"tickets",
+								"{{ticketId}}"
+							]
+						},
+						"description": "Find a ticket by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Update ticket",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Should return a 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"})",
+									"",
+									"pm.test(\"Should find our ticket\", function () {",
+									"    const ticketId = pm.collectionVariables.get(\"ticketId\");",
+									"    pm.expect(pm.response.json().id).to.eql(ticketId);",
+									"})",
+									"",
+									"pm.test(\"Should update the given properties\", function () {",
+									"    const updatedProperties = JSON.parse(pm.request.body.raw)",
+									"    const res = pm.response.json();",
+									"",
+									"    Object.keys(updatedProperties).forEach((key) => {",
+									"        pm.expect(res[key]).to.eql(updatedProperties[key]);",
+									"    });",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"priority\": \"high\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/tickets/{{ticketId}}",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"tickets",
+								"{{ticketId}}"
+							]
+						},
+						"description": "Update any attribute of a ticket"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete ticket",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Should return a 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"})",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/tickets/{{ticketId}}",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"tickets",
+								"{{ticketId}}"
+							]
+						},
+						"description": "Delete any ticket"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "API_URL",
+			"value": ""
+		},
+		{
+			"key": "ticketId",
+			"value": ""
+		}
+	]
+}

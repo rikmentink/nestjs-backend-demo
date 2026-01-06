@@ -17,7 +17,7 @@ export class TicketsService {
   }
 
   findOne(id: string) {
-    return this.prisma.ticket.findUnique({ where: { id } });
+    return this.prisma.ticket.findUniqueOrThrow({ where: { id } });
   }
 
   update(id: string, updateTicketDto: UpdateTicketDto) {
