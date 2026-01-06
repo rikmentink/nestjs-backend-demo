@@ -1,4 +1,4 @@
-import { Prisma, TicketPriority } from '@prisma/client';
+import { Prisma, TicketPriority } from 'src/generated/prisma/client';
 
 export class CreateTicketDto implements Pick<
   Prisma.TicketUncheckedCreateInput,

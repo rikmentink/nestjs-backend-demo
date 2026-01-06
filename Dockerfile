@@ -7,8 +7,8 @@ RUN npm ci
 
 COPY . .
 
-# Build and generate Prisma client
-RUN npm run build && ./node_modules/.bin/prisma generate
+# Build and generate Prisma client and build the application
+RUN ./node_modules/.bin/prisma generate && npm run build
 
 # SQLite will be stored here
 RUN mkdir -p /data
