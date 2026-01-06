@@ -24,26 +24,30 @@ I have backend experience in Python and wanted to translate those concepts to a 
 
 ## How to run
 
-### Step 1: Configure environment
+You can choose to run this app locally using the CLI (recommended for development) or using Docker (recommended for testing or production).
+
+### Local
+
+Configure your environment via `.env` (not committed). Start from the provided template:
 
 ```bash
-cp env.example .env
-```
+cp .env.example .env
 
-### Step 2: Run the application
-
-#### Local
-
-```bash
 npm install
 
-# Initialize database (first time / after schema changes)
-./node_modules/.bin/prisma migrate dev --name init --url "file:./dev.db"
+# Apply all existing migrations to your local database
+./node_modules/.bin/prisma migrate deploy
 
 npm run start:dev
 ```
 
-#### Docker (Compose)
+When you change `prisma/schema.prisma`, create a new migration during development:
+
+```bash
+./node_modules/.bin/prisma migrate dev --name "<change>"
+```
+
+### Docker (Compose)
 
 ```bash
 docker compose up --build
